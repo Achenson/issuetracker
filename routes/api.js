@@ -1,17 +1,17 @@
 /*
-*
-*
-*       Complete the API routing below
-*
-*
-*/
+ *
+ *
+ *       Complete the API routing below
+ *
+ *
+ */
 
-'use strict';
+"use strict";
 
-var expect = require('chai').expect;
-var MongoClient = require('mongodb');
-var ObjectId = require('mongodb').ObjectID;
-var mongoose = require('mongoose');
+var expect = require("chai").expect;
+var MongoClient = require("mongodb");
+var ObjectId = require("mongodb").ObjectID;
+var mongoose = require("mongoose");
 
 //const CONNECTION_STRING = process.env.DB; //MongoClient.connect(CONNECTION_STRING, function(err, db) {});
 
@@ -23,9 +23,7 @@ mongoose
   .then(() => console.log("connection succesfull"))
   .catch(err => console.log(err));
 
-module.exports = function (app) {
-
-
+module.exports = function(app) {
   const IssueSchema = new mongoose.Schema({
     issue_title: {
       type: String,
@@ -41,61 +39,65 @@ module.exports = function (app) {
     },
     assigned_to: {
       type: String,
-      default: ''
+      default: ""
     },
     status_text: {
       type: String,
-      default: ''
+      default: ""
+    },
+    created_on: {
+      type: Date,
+      default: new Date()
+    },
+
+    updated_on: {
+      type: Date,
+      default: new Date()
+    },
+    open: {
+      type: Boolean,
+      default: true
     }
-  })
+  });
 
-  const Issue = mongoose.model('Issue', IssueSchema);
+  const Issue = mongoose.model("Issue", IssueSchema);
 
-  app.route('/api/issues/:project')
+  app
+    .route("/api/issues/:project/post")
 
-
-  
-    .get(function (req, res){
+    .get(function(req, res) {
       var project = req.params.project;
-      
-
-
     })
-    
-    .post(function (req, res, next){
+
+    .post(function(req, res, next) {
       var project = req.params.project;
 
       let newIssue = new Issue({
-        
         issue_title: req.body.issue_title,
         issue_text: req.body.issue_text,
         created_by: req.body.created_by,
         assigned_to: req.body.assigned_to,
         status_text: req.body.status_text
+      });
 
-
-
-      })
-
-      newIssue.save( err => {
-        if (err) return console.error(err)
-      })
-
+      newIssue.save(err => {
+        if (err) return console.error(err);
+      });
 
       next();
-
-
-      
     })
-    
-    .put(function (req, res){
+
+    // .put(function (req, res){
+    //  var project = req.params.project;
+    //
+    //})
+
+    .delete(function(req, res) {
       var project = req.params.project;
-      
-    })
-    
-    .delete(function (req, res){
-      var project = req.params.project;
-      
     });
-    
+
+  //'put'
+  app.route("/api/issues/:project/update").post(function(req, res, next) {
+    var project = req.params.project;
+  });
 };
