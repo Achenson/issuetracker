@@ -84,7 +84,7 @@ module.exports = function(app) {
         if (err) return console.error(err);
       });
 
-      next();
+      res.json(newIssue);
     })
 
     // .put(function (req, res){
@@ -99,5 +99,34 @@ module.exports = function(app) {
   //'put'
   app.route("/api/issues/:project/update").post(function(req, res, next) {
     var project = req.params.project;
+
+    Issue.findByIdAndUpdate(
+      req.body._id, 
+      {
+        $set: {
+          issue_title: req.body.issue_title
+
+        }
+      }
+    ).exec((err, data) => {
+      if (err) console.log(err)
+      res.json({message: `could not update ${req.body._id}`})
+
+      if (data) {
+        console.log('successfully updated');
+        res.json({message: 'successfully updated'})
+        
+      }
+
+
+    })
+
+ 
+
+
+
+
+
+
   });
 };
