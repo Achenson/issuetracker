@@ -25,15 +25,66 @@ mongoose
 
 module.exports = function (app) {
 
+
+  const IssueSchema = new mongoose.Schema({
+    issue_title: {
+      type: String,
+      required: true
+    },
+    issue_text: {
+      type: String,
+      required: true
+    },
+    created_by: {
+      type: String,
+      required: true
+    },
+    assigned_to: {
+      type: String,
+      default: ''
+    },
+    status_text: {
+      type: String,
+      default: ''
+    }
+  })
+
+  const Issue = mongoose.model('Issue', IssueSchema);
+
   app.route('/api/issues/:project')
+
+
   
     .get(function (req, res){
       var project = req.params.project;
       
+
+
     })
     
-    .post(function (req, res){
+    .post(function (req, res, next){
       var project = req.params.project;
+
+      let newIssue = new Issue({
+        
+        issue_title: req.body.issue_title,
+        issue_text: req.body.issue_text,
+        created_by: req.body.created_by,
+        assigned_to: req.body.assigned_to,
+        status_text: req.body.status_text
+
+
+
+      })
+
+      newIssue.save( err => {
+        if (err) return console.error(err)
+      })
+
+
+      next();
+
+
       
     })
     
