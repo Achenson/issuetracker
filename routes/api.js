@@ -110,7 +110,7 @@ module.exports = function(app) {
 
 
     Issue.findOneAndUpdate(
-      {issue_title: req.body.issue_title, 
+      {_id: req.body._id, 
      
       },
       
@@ -123,10 +123,11 @@ module.exports = function(app) {
         }
       }
     ).exec((err, data) => {
-      if (err) {return console.error(err)}
-      
-      if (data === null) {
-        res.json({message: 'could not update'})
+      if (err) { console.error(err)
+        res.json({message: `could not update ${req.body._id}`})
+      }
+      else if (data === null) {
+        res.json({message: `could not update ${req.body._id}`})
         
       } else {
         console.log(data);
