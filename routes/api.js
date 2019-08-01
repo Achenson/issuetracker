@@ -100,26 +100,53 @@ module.exports = function(app) {
   app.route("/api/issues/:project/update").post(function(req, res, next) {
     var project = req.params.project;
 
-    Issue.findByIdAndUpdate(
-      req.body._id, 
+  //  Issue.findById(req.body._id)
+    //.exec((err, data) => {
+    //  if (err) console.log('NOT FOUND');
+      //console.log(data);
+    //})
+    console.log(req.body.issue_title);
+
+
+
+    Issue.findOneAndUpdate(
+      {issue_title: req.body.issue_title, 
+     
+      },
+      
+  
       {
+        
         $set: {
-          issue_title: req.body.issue_title
+          issue_text: req.body.issue_text
 
         }
       }
     ).exec((err, data) => {
-      if (err) console.log(err)
-      res.json({message: `could not update ${req.body._id}`})
-
-      if (data) {
-        console.log('successfully updated');
-        res.json({message: 'successfully updated'})
+      if (err) {return console.error(err)}
+      
+      if (data === null) {
+        res.json({message: 'could not update'})
         
+      } else {
+        console.log(data);
+        res.json({message: 'successfully updated'})
+      }
+      
+
+      
+
+       
+        
+
+
+
+
+
       }
 
 
-    })
+    )
 
  
 
