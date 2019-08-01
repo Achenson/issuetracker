@@ -25,7 +25,6 @@ mongoose
 
 module.exports = function(app) {
   const IssueSchema = new mongoose.Schema({
-
     project_name: {
       type: String
     },
@@ -70,9 +69,6 @@ module.exports = function(app) {
     .route("/api/issues/:project/post")
 
     .get(function(req, res) {
-
-
-
       var project = req.params.project;
     })
 
@@ -93,83 +89,65 @@ module.exports = function(app) {
       });
 
       res.json(newIssue);
-    })
-
+    });
 
   //'put'
   app.route("/api/issues/:project/update").post(function(req, res, next) {
     var project = req.params.project;
-
-    //  Issue.findById(req.body._id)
-    //.exec((err, data) => {
-    //  if (err) console.log('NOT FOUND');
-    //console.log(data);
-    //})
-
+    //this object will be turn to array, filtered(in order not to uptade
+    //properties which were not filled be the user), turn to object again
+    // and then passed to $set in findOneAndUpdate
     let propsToChange = {
       issue_title: req.body.issue_title,
-        issue_text: req.body.issue_text,
-        created_by: req.body.created_by,
-        assigned_to: req.body.assigned_to,
-        status_text: req.body.status_text
+      issue_text: req.body.issue_text,
+      created_by: req.body.created_by,
+      assigned_to: req.body.assigned_to,
+      status_text: req.body.status_text
+    };
 
+    let arrayfromObj = Object.entries(propsToChange).filter(el => el[1] !== "");
+
+    let changedObj = { updated_on: new Date() };
+
+    for (let el of arrayfromObj) {
+      changedObj[el[0]] = el[1];
+    }
+    /// to change???
+    if (req.body.open) {
+      changedObj.open = false;
+    } else {
+      changedObj.open = true;
     }
 
-    
-     let arrayfromObj= Object.entries(propsToChange).filter(
-
-        ([key, value]) => [key, value != false]
-      )
-    
-
-    
-
-
-
     console.log(arrayfromObj);
+    console.log(changedObj);
 
     //$set: { issue_text: req.body.issue_text }
 
-    if(req.body.issue_text != false) {
-      Issue.findOneAndUpdate(
-        { _id: req.body._id },
-  
-        {
-          $set: { issue_text: req.body.issue_text,
-                 updated_on: new Date()
-          },
-          
-        }
-      ).exec((err, data) => {
-        if (err) {
-          console.error(err);
-          res.json({ message: `could not update ${req.body._id}` });
-        } else if (data === null) {
-          res.json({ message: `could not update ${req.body._id}` });
-        } else {
-          console.log(data);
-          res.json({ message: "successfully updated" });
-        }
-      });
-    } else {
-      res.json({message: "could not update"})
-    }
+    Issue.findOneAndUpdate(
+      { _id: req.body._id },
 
- 
-
-
+      {
+        $set: changedObj
+      }
+    ).exec((err, data) => {
+      if (err) {
+        console.error(err);
+        res.json({ message: `could not update ${req.body._id}` });
+      } else if (data === null) {
+        res.json({ message: `could not update ${req.body._id}` });
+      } else {
+        console.log(data);
+        res.json({ message: "successfully updated" });
+      }
+    });
   });
 
-// delete
+  // delete
   app.route("/api/issues/:project/delete").post(function(req, res, next) {
-
     console.log(req.body._id);
-    
 
-    Issue.findByIdAndDelete(
-      req.body._id
-  
-    ).exec((err,data) => {
+    Issue.findByIdAndDelete(req.body._id).exec((err, data) => {
       if (err) {
         console.error(err);
         res.json({ message: `could not delete ${req.body._id}` });
@@ -179,12 +157,6 @@ module.exports = function(app) {
         console.log(data);
         res.json({ message: "successfully deleted" });
       }
-    })
-
-
-
-
+    });
   });
-
-
-}
+};
