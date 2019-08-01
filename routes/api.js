@@ -100,61 +100,59 @@ module.exports = function(app) {
   app.route("/api/issues/:project/update").post(function(req, res, next) {
     var project = req.params.project;
 
-  //  Issue.findById(req.body._id)
+    //  Issue.findById(req.body._id)
     //.exec((err, data) => {
     //  if (err) console.log('NOT FOUND');
-      //console.log(data);
+    //console.log(data);
     //})
     console.log(req.body.issue_title);
 
-
-
     Issue.findOneAndUpdate(
-      {_id: req.body._id, 
-     
-      },
-      
-  
+      { _id: req.body._id },
+
       {
-        
         $set: {
           issue_text: req.body.issue_text
-
         }
       }
     ).exec((err, data) => {
-      if (err) { console.error(err)
-        res.json({message: `could not update ${req.body._id}`})
-      }
-      else if (data === null) {
-        res.json({message: `could not update ${req.body._id}`})
-        
+      if (err) {
+        console.error(err);
+        res.json({ message: `could not update ${req.body._id}` });
+      } else if (data === null) {
+        res.json({ message: `could not update ${req.body._id}` });
       } else {
         console.log(data);
-        res.json({message: 'successfully updated'})
+        res.json({ message: "successfully updated" });
       }
-      
-
-      
-
-       
-        
+    });
+  });
 
 
+  app.route("/api/issues/:project/delete").post(function(req, res, next) {
 
+    console.log(req.body._id);
+    
 
-
+    Issue.findByIdAndDelete(
+      req.body._id
+  
+    ).exec((err,data) => {
+      if (err) {
+        console.error(err);
+        res.json({ message: `could not delete ${req.body._id}` });
+      } else if (data === null) {
+        res.json({ message: `_id error` });
+      } else {
+        console.log(data);
+        res.json({ message: "successfully deleted" });
       }
-
-
-    )
-
- 
-
-
+    })
 
 
 
 
   });
-};
+
+
+}
