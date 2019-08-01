@@ -25,6 +25,10 @@ mongoose
 
 module.exports = function(app) {
   const IssueSchema = new mongoose.Schema({
+
+    project_name: {
+      type: String
+    },
     issue_title: {
       type: String,
       required: true
@@ -66,6 +70,9 @@ module.exports = function(app) {
     .route("/api/issues/:project/post")
 
     .get(function(req, res) {
+
+
+
       var project = req.params.project;
     })
 
@@ -73,6 +80,7 @@ module.exports = function(app) {
       var project = req.params.project;
 
       let newIssue = new Issue({
+        project_name: project,
         issue_title: req.body.issue_title,
         issue_text: req.body.issue_text,
         created_by: req.body.created_by,
@@ -87,14 +95,6 @@ module.exports = function(app) {
       res.json(newIssue);
     })
 
-    // .put(function (req, res){
-    //  var project = req.params.project;
-    //
-    //})
-
-    .delete(function(req, res) {
-      var project = req.params.project;
-    });
 
   //'put'
   app.route("/api/issues/:project/update").post(function(req, res, next) {
@@ -105,30 +105,62 @@ module.exports = function(app) {
     //  if (err) console.log('NOT FOUND');
     //console.log(data);
     //})
-    console.log(req.body.issue_title);
 
-    Issue.findOneAndUpdate(
-      { _id: req.body._id },
+    let propsToChange = {
+      issue_title: req.body.issue_title,
+        issue_text: req.body.issue_text,
+        created_by: req.body.created_by,
+        assigned_to: req.body.assigned_to,
+        status_text: req.body.status_text
 
-      {
-        $set: {
-          issue_text: req.body.issue_text
+    }
+
+    
+     let arrayfromObj= Object.entries(propsToChange).filter(
+
+        ([key, value]) => [key, value != false]
+      )
+    
+
+    
+
+
+
+    console.log(arrayfromObj);
+
+    //$set: { issue_text: req.body.issue_text }
+
+    if(req.body.issue_text != false) {
+      Issue.findOneAndUpdate(
+        { _id: req.body._id },
+  
+        {
+          $set: { issue_text: req.body.issue_text,
+                 updated_on: new Date()
+          },
+          
         }
-      }
-    ).exec((err, data) => {
-      if (err) {
-        console.error(err);
-        res.json({ message: `could not update ${req.body._id}` });
-      } else if (data === null) {
-        res.json({ message: `could not update ${req.body._id}` });
-      } else {
-        console.log(data);
-        res.json({ message: "successfully updated" });
-      }
-    });
+      ).exec((err, data) => {
+        if (err) {
+          console.error(err);
+          res.json({ message: `could not update ${req.body._id}` });
+        } else if (data === null) {
+          res.json({ message: `could not update ${req.body._id}` });
+        } else {
+          console.log(data);
+          res.json({ message: "successfully updated" });
+        }
+      });
+    } else {
+      res.json({message: "could not update"})
+    }
+
+ 
+
+
   });
 
-
+// delete
   app.route("/api/issues/:project/delete").post(function(req, res, next) {
 
     console.log(req.body._id);
