@@ -50,14 +50,14 @@
       <code id='submit_success'></code>
 
       <h3>Update issue on <i>apitest</i> (Change any or all to update issue on the _id supplied)</h3>
-      <form id="testForm2" class="border" action="/api/issues/apitest/update" method="post">
-        <input type="text" name="_id" placeholder="*_id" style="width: 100px" required ><br>
-        <input type="text" name="issue_title" placeholder="(opt)Title" style="width: 100px"><br>
-        <textarea type="text" name="issue_text" placeholder="(opt)Text" style="width: 100px"></textarea><br>
-        <input type="text" name="created_by" placeholder="(opt)Created by" style="width: 100px"><br>
-        <input type="text" name="assigned_to" placeholder="(opt)Assigned to" style="width: 100px"><br>
-        <input type="text" name="status_text" placeholder="(opt)Status text" style="width: 100px"><br>
-        <label><input type="checkbox" name="open" value=false> Check to close issue</label><br>
+      <form id="testForm2" class="border" >
+        <input id='input_id' type="text" name="_id" placeholder="*_id" style="width: 100px" required ><br>
+        <input id='7' type="text" name="issue_title" placeholder="(opt)Title" style="width: 100px"><br>
+        <textarea id='8' type="text" name="issue_text" placeholder="(opt)Text" style="width: 100px"></textarea><br>
+        <input id='9' type="text" name="created_by" placeholder="(opt)Created by" style="width: 100px"><br>
+        <input id='10' type="text" name="assigned_to" placeholder="(opt)Assigned to" style="width: 100px"><br>
+        <input id='11' type="text" name="status_text" placeholder="(opt)Status text" style="width: 100px"><br>
+        <label><input id='open' type="checkbox" name="open" value=false> Check to close issue</label><br>
         <button type="submit">Submit Issue</button>
       </form><br>
       <h3>Delete issue on <i>apitest</i></h3>
@@ -74,9 +74,9 @@
             crossorigin="anonymous"></script>
     <script>
       // <form id="testForm" class="border" action="/api/issues/apitest/post" method="post">
-     
+     //action="/api/issues/apitest/update" method="post"
         let postForm = document.getElementById('testForm');
-
+        let putForm = document.getElementById('testForm2');
       
 
 
@@ -88,7 +88,7 @@
       e.preventDefault();
 
       let issue_title_val = document.getElementById('1').value;
-        let  issue_text_val = document.getElementById('2').value;
+      let  issue_text_val = document.getElementById('2').value;
         let created_by_val = document.getElementById('3').value;
         let assigned_to_val = document.getElementById('4').value;
         let status_text_val = document.getElementById('5').value;
@@ -123,6 +123,48 @@
       }
 
     
+
+      putForm.onsubmit = function(e) {
+       e.preventDefault();
+
+        let input_id_val = document.getElementById('input_id').value;
+        let issue_title_val = document.getElementById('7').value;
+        let issue_text_val = document.getElementById('8').value;
+        let  created_by_val = document.getElementById('9').value;
+        let assigned_to_val = document.getElementById('10').value;
+        let status_text_val = document.getElementById('11').value;
+        let open_val = document.getElementById('open').value;
+
+        let putURL = new URL(location.origin + '/api/issues/apitest/update')
+
+
+
+
+
+        fetch(putURL, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+        'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          _id: input_id_val,
+          issue_title: issue_title_val,
+          issue_text: issue_text_val,
+      created_by: created_by_val,
+      assigned_to: assigned_to_val,
+    status_text: status_text_val,
+    open: open_val
+
+
+
+                      })
+      
+      
+      }).then((res) => console.log(res))
+
+      }
+
+
 
 
 

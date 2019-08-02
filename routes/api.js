@@ -104,6 +104,10 @@ module.exports = function(app) {
    
 
     .post(function(req, res, next) {
+
+      console.log('posting');
+      
+
       var project = req.params.project;
 
     let newIssue = new Issue({
@@ -127,6 +131,9 @@ module.exports = function(app) {
 
   //'put'
   app.route("/api/issues/:project/update").post(function(req, res, next) {
+
+    console.log('putting');
+    
     var project = req.params.project;
     //this object will be turn to array, filtered(in order not to uptade
     //properties which were not filled be the user), turn to object again
