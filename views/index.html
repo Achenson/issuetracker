@@ -135,14 +135,14 @@
         let status_text_val = document.getElementById('11').value;
         let open_val = document.getElementById('open').value;
 
-        let putURL = new URL(location.origin + '/api/issues/apitest/update')
+        let putURL = new URL(location.origin + '/api/issues/apitest/')
 
 
 
 
 
         fetch(putURL, {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Accept': 'application/json',
         'Content-Type': 'application/json'},

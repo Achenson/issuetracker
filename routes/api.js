@@ -130,7 +130,7 @@ module.exports = function(app) {
     });
 
   //'put'
-  app.route("/api/issues/:project/update").post(function(req, res, next) {
+  app.route("/api/issues/:project/").put(function(req, res, next) {
 
     console.log('putting');
     
