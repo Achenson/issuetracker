@@ -30,15 +30,18 @@ module.exports = function(app) {
     },
     issue_title: {
       type: String,
-      required: true
+      required: true,
+      //default: ''
     },
     issue_text: {
       type: String,
-      required: true
+      required: true,
+      //default: ''
     },
     created_by: {
       type: String,
-      required: true
+      required: true,
+      //default: ''
     },
     assigned_to: {
       type: String,
@@ -96,27 +99,30 @@ module.exports = function(app) {
 
   })
   app
-    .route("/api/issues/:project/post")
+    .route("/api/issues/:project/")
 
    
 
     .post(function(req, res, next) {
       var project = req.params.project;
 
-      let newIssue = new Issue({
-        project_name: project,
-        issue_title: req.body.issue_title,
+    let newIssue = new Issue({
+      project_name: project,
+       issue_title: req.body.issue_title,
         issue_text: req.body.issue_text,
-        created_by: req.body.created_by,
-        assigned_to: req.body.assigned_to,
-        status_text: req.body.status_text
-      });
+      created_by: req.body.created_by,
+      assigned_to: req.body.assigned_to,
+    status_text: req.body.status_text
+ });
 
-      newIssue.save(err => {
-        if (err) return console.error(err);
-      });
-
-      res.json(newIssue);
+    newIssue.save(err => {
+       if (err) return console.error(err);
+     });
+    
+    // res.json(newIssue);
+     console.log(req.body)
+     next();
+      
     });
 
   //'put'

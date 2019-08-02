@@ -39,14 +39,16 @@
     <div id='testui' style='margin-left: 5%'>
       <h2 style="text-align: left">API Tests:</h2>
       <h3>Submit issue on <i>apitest</i></h3>
-      <form id="testForm" class="border" action="/api/issues/apitest/post" method="post">
-        <input type="text" name="issue_title" placeholder="*Title" style="width: 100px" required=''><br>
-        <textarea type="text" name="issue_text" placeholder="*Text" style="width: 100px" required=''></textarea><br>
-        <input type="text" name="created_by" placeholder="*Created by" style="width: 100px" required=''><br>
-        <input type="text" name="assigned_to" placeholder="(opt)Assigned to" style="width: 100px"><br>
-        <input type="text" name="status_text" placeholder="(opt)Status text" style="width: 100px"><br>
+      <form id="testForm" class="border" >
+        <input id='1' type="text" name="issue_title" placeholder="*Title" style="width: 100px" ><br>
+        <textarea id='2' type="text" name="issue_text" placeholder="*Text" style="width: 100px" ></textarea><br>
+        <input id='3' type="text" name="created_by" placeholder="*Created by" style="width: 100px" ><br>
+        <input id='4'type="text" name="assigned_to" placeholder="(opt)Assigned to" style="width: 100px"><br>
+        <input id='5' type="text" name="status_text" placeholder="(opt)Status text" style="width: 100px"><br>
         <button type="submit">Submit Issue</button>
       </form><br>
+      <code id='submit_success'></code>
+
       <h3>Update issue on <i>apitest</i> (Change any or all to update issue on the _id supplied)</h3>
       <form id="testForm2" class="border" action="/api/issues/apitest/update" method="post">
         <input type="text" name="_id" placeholder="*_id" style="width: 100px" required ><br>
@@ -71,8 +73,59 @@
             integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
             crossorigin="anonymous"></script>
     <script>
+      // <form id="testForm" class="border" action="/api/issues/apitest/post" method="post">
+     
+        let postForm = document.getElementById('testForm');
 
       
+
+
+
+
+        //let issue_title = document.querySelector()
+
+     postForm.onsubmit = function(e) {
+      e.preventDefault();
+
+      let issue_title_val = document.getElementById('1').value;
+        let  issue_text_val = document.getElementById('2').value;
+        let created_by_val = document.getElementById('3').value;
+        let assigned_to_val = document.getElementById('4').value;
+        let status_text_val = document.getElementById('5').value;
+
+       let postURL = new URL(location.origin + '/api/issues/apitest/')
+      
+
+
+      fetch(postURL, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+        'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          issue_title: issue_title_val,
+          issue_text: issue_text_val,
+      created_by: created_by_val,
+      assigned_to: assigned_to_val,
+    status_text: status_text_val
+
+
+
+                      })
+      
+      
+      })
+      .then((res) => console.log(res) )
+      //.then(result => response.json())
+      //console.log(result.message)
+
+
+      }
+
+    
+
+
+
 /*
 
       $(function() {
