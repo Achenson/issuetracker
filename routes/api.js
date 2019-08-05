@@ -30,17 +30,17 @@ module.exports = function(app) {
     },
     issue_title: {
       type: String,
-      required: true,
+      required: true
       //default: ''
     },
     issue_text: {
       type: String,
-      required: true,
+      required: true
       //default: ''
     },
     created_by: {
       type: String,
-      required: true,
+      required: true
       //default: ''
     },
     assigned_to: {
@@ -68,75 +68,49 @@ module.exports = function(app) {
 
   const Issue = mongoose.model("Issue", IssueSchema);
 
+  app.route("/api/issues/:project/").get(function(req, res) {
+    let objectOfQueries = req.query;
+    objectOfQueries.project_name = req.params.project;
 
+    Issue.find(objectOfQueries).exec((err, data) => {
+      if (err) return console.error(err);
 
+      res.json(data);
+    });
+  });
   app
     .route("/api/issues/:project/")
-    .get(function(req, res) {
-      
-
-      let objectOfQueries = req.query
-      objectOfQueries.project_name = req.params.project
-
-
-      Issue.find(objectOfQueries)
-        .exec( (err, data) => {
-          if (err) return console.error(err)
-
-          
-          
-
-            res.json(data)
-      
-        
-
-        
-
-
-
-
-    })
-
-  })
-  app
-    .route("/api/issues/:project/")
-
-   
 
     .post(function(req, res, next) {
-
-      console.log('posting');
-      
+      console.log("posting");
 
       var project = req.params.project;
 
-    let newIssue = new Issue({
-      project_name: project,
-       issue_title: req.body.issue_title,
+      let newIssue = new Issue({
+        project_name: project,
+        issue_title: req.body.issue_title,
         issue_text: req.body.issue_text,
-      created_by: req.body.created_by,
-      assigned_to: req.body.assigned_to,
-    status_text: req.body.status_text
- });
+        created_by: req.body.created_by,
+        assigned_to: req.body.assigned_to,
+        status_text: req.body.status_text
+      });
 
-    newIssue.save(err => {
-       if (err) return console.error(err);
-     });
-    
-     console.log(req.body)
-    res.json(newIssue);
-     
-     //next();
-      
+      newIssue.save(err => {
+        if (err) return console.error(err);
+      });
+
+      console.log(req.body);
+      res.json(newIssue);
+
+      //next();
     });
 
   //'put'
   app.route("/api/issues/:project/").put(function(req, res, next) {
+    console.log("putting");
 
-    console.log('putting');
-    
     var project = req.params.project;
-    //this object will be turn to array, filtered(in order not to uptade
+    //this object will be turn to array, filtered (in order not to update
     //properties which were not filled be the user), turn to object again
     // and then passed to $set in findOneAndUpdate
     let propsToChange = {
@@ -161,8 +135,10 @@ module.exports = function(app) {
       changedObj.open = true;
     }
 
-    console.log(arrayfromObj);
-    console.log(changedObj);
+    console.log("TCL: arrayfromObj", arrayfromObj);
+    console.log("TCL: changedObj", changedObj);
+    console.log(Object.keys(changedObj).length);
+    
 
     //$set: { issue_text: req.body.issue_text }
 
@@ -173,14 +149,26 @@ module.exports = function(app) {
         $set: changedObj
       }
     ).exec((err, data) => {
+      
+
+
       if (err) {
         console.error(err);
+        
         res.json({ message: `could not update ${req.body._id}` });
-      } else if (data === null) {
-        res.json({ message: `could not update ${req.body._id}` });
-      } else {
+
+        // if only _id is submitted, the changedObj will consist of new Data & open
+      } else if (Object.keys(changedObj).length === 2) {
+        console.log('adsfadfadf');
+       res.json({ message: `no updated field sent` });
+      return;
+
+      } else  {
+
+
         console.log(data);
-        res.json({ message: "successfully updated" });
+        
+        res.json(changedObj);
       }
     });
   });

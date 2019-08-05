@@ -110,18 +110,119 @@ describe("POST - Routing Tests", function() {
         done();
       });
 
-    it("Missing required fields", function(done) {
-      chai
-        .request(server)
-        .post("/api/issues/test")
-        .send({
-          issue_title: "Title3"
-        })
-        .end(function(err, res) {
-          assert.notEqual(res.status, 200);
-
-          done();
-        });
-    });
+   
   });
+
+  it("Missing required fields", function(done) {
+    chai
+      .request(server)
+      .post("/api/issues/test")
+      .send({
+        created_by: "nobody"
+      })
+      .end(function(err, res) {
+        assert.equal(res.status, 200);
+        assert.equal(res.type, "application/json");
+        assert.equal(res.issue_title, undefined);
+
+
+        done();
+      });
+  });
+
+
+
 });
+
+
+describe("PUT - Routing Tests", function() {
+
+  it("No body", function(done) {
+    chai
+      .request(server)
+      .put("/api/issues/test")
+      .send({_id: "5d480c5d2190de238c8d9480",
+      issue_title: '',
+      issue_text: '',
+      created_by: '',
+      assigned_to: '',
+      status_text: ''
+
+      
+      })
+      .end(function(err, res) {
+        assert.equal(res.status, 200);
+        assert.equal(res.type, "application/json");
+
+        assert.equal(res.body.message, "no updated field sent");
+        
+        
+
+        done();
+      });
+  });
+
+
+  it("Wrong id", function(done) {
+    chai
+      .request(server)
+      .put("/api/issues/test")
+      .send({_id: "random wrong id"
+      
+      })
+      .end(function(err, res) {
+       assert.equal(res.status, 200);
+        assert.equal(res.type, "application/json");
+
+        assert.equal(res.body.message, `could not update random wrong id`);
+        
+        
+
+        done();
+      });
+
+
+      
+  });
+
+
+  it('One field to update', function(done) {
+    chai
+    .request(server)
+    .put("/api/issues/test")
+    .send({_id: "5d480c5d2190de238c8d9480",
+    issue_text: "testing one field update"
+    
+    })
+    .end(function(err, res) {
+      assert.equal(res.status, 200);
+      assert.equal(res.type, "application/json");
+
+      assert.equal(res.body.issue_title, undefined);
+      assert.equal(res.body.issue_text, `testing one field update`);
+
+      assert.equal(res.body.created_by, undefined);
+      assert.equal(res.body.assigned_to, undefined);
+      assert.equal(res.body.status_text, undefined);
+      
+      
+      
+
+      done();
+    });
+
+
+
+
+
+    
+  });
+
+
+
+
+
+
+
+  
+  });
