@@ -123,9 +123,10 @@ module.exports = function(app) {
        if (err) return console.error(err);
      });
     
-    // res.json(newIssue);
      console.log(req.body)
-     next();
+    res.json(newIssue);
+     
+     //next();
       
     });
 
