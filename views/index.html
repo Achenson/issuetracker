@@ -61,8 +61,8 @@
         <button type="submit">Submit Issue</button>
       </form><br>
       <h3>Delete issue on <i>apitest</i></h3>
-      <form id="testForm2" class="border" action="/api/issues/apitest/delete" method="post">
-        <input type="text" name="_id" placeholder="_id" style="width: 100px" required ><br>
+      <form id="testForm3" class="border" >
+        <input id="delete_id" type="text" name="_id" placeholder="_id" style="width: 100px" required ><br>
         <button type="submit">Delete Issue</button>
       </form>
       <code id='jsonResult'></code>
@@ -75,9 +75,10 @@
     <script>
       // <form id="testForm" class="border" action="/api/issues/apitest/post" method="post">
      //action="/api/issues/apitest/update" method="post"
+    //action="/api/issues/apitest/delete" method="post"
         let postForm = document.getElementById('testForm');
         let putForm = document.getElementById('testForm2');
-      
+        let deleteForm = document.getElementById('testForm3');
 
 
 
@@ -164,6 +165,20 @@
 
       }
 
+      deleteForm.onsubmit = function(e) {
+        e.preventDefault();
+        
+        let delURL = new URL(location.origin + '/api/issues/apitest/')
+        let delete_id = document.getElementById('delete_id').value;
+       
+        fetch(delURL, {
+          method: "DELETE",
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({_id: delete_id})
+        })
+        .then(res => res.json())
+        .then(res => console.log(res))
+      }
 
 
 

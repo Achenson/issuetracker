@@ -174,18 +174,18 @@ module.exports = function(app) {
   });
 
   // delete
-  app.route("/api/issues/:project/delete").post(function(req, res, next) {
+  app.route("/api/issues/:project/").delete(function(req, res, next) {
     console.log(req.body._id);
 
     Issue.findByIdAndDelete(req.body._id).exec((err, data) => {
-      if (err) {
+      if (req.body._id === '') {
+        res.json({ message: `_id error` })
+      } else if (err) {
         console.error(err);
         res.json({ message: `could not delete ${req.body._id}` });
-      } else if (data === null) {
-        res.json({ message: `_id error` });
       } else {
         console.log(data);
-        res.json({ message: "successfully deleted" });
+        res.json({ message: `deleted ${req.body._id}` });
       }
     });
   });

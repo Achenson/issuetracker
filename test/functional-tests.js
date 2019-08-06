@@ -226,3 +226,69 @@ describe("PUT - Routing Tests", function() {
 
   
   });
+
+
+describe("DELETE - /api/issues/{project}", function() {
+
+
+
+  it('Valid _id', function(done) {
+    chai
+    .request(server)
+    .delete("/api/issues/test")
+    .send({_id: "5d4969db7e201f203045239d"
+    
+    })
+    .end(function (err, res) {
+      assert.equal(res.status, 200);
+      assert.equal(res.type, "application/json");
+
+      assert.equal(res.body.message, "deleted 5d4969db7e201f203045239d");
+
+      done();
+    })
+  
+  })
+
+  it('No _id', function(done) {
+    chai
+    .request(server)
+    .delete("/api/issues/test")
+    .send({_id: ""
+    
+    })
+    .end(function (err, res) {
+      assert.equal(res.status, 200);
+      assert.equal(res.type, "application/json");
+
+      assert.equal(res.body.message, "_id error");
+
+      done();
+    })
+  
+  })
+
+
+  it('Invalid id', function(done) {
+    chai
+    .request(server)
+    .delete("/api/issues/test")
+    .send({_id: "fff"
+    
+    })
+    .end(function (err, res) {
+      assert.equal(res.status, 200);
+      assert.equal(res.type, "application/json");
+
+      assert.equal(res.body.message, "could not delete fff");
+
+      done();
+    })
+  
+  })
+
+
+
+
+
+})
