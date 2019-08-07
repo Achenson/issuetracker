@@ -72,7 +72,6 @@
     </center>
 
     <script
-      src="https://code.jquery.com/jquery-2.2.1.min.js"
       integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
       crossorigin="anonymous"
     ></script>
@@ -80,10 +79,10 @@
       window.onload = () => {
         let postForm = document.getElementById("newIssue");
         let issueDisplay = document.getElementById("issueDisplay");
-
+        //getting apitest from http://localhost:4000/apitest/
         let currentProject = window.location.pathname.replace(/\//g, "");
+        //to get the same URL as used in routes api.js getRequest
         let myUrl = new URL(location.origin + "/api/issues/" + currentProject);
-        console.log(myUrl);
 
         fetch(myUrl)
           .then(response => response.json())
@@ -122,6 +121,7 @@
             issueDisplay.innerHTML = issues.join("");
 
             console.log(data);
+            //getting an array of all href with .closeIssue class
             let closeIssueLink = document.querySelectorAll(".closeIssue");
             console.log(closeIssueLink);
 
@@ -141,25 +141,24 @@
                     "Content-Type": "application/json"
                   },
                   body: JSON.stringify({
-
                     _id: linkId,
                     //'' are submited when empty fields are posted on the index html page
-                    issue_title: '',
-          issue_text: '',
-      created_by: '',
-      assigned_to: '',
-    status_text: '',
+                    issue_title: "",
+                    issue_text: "",
+                    created_by: "",
+                    assigned_to: "",
+                    status_text: "",
 
-                    //unintuitive!!!! this close the issue
+                    //unintuitive, that's because of the input name 'open' - it has to be checked (true value) to close an issue
                     open: true
                   })
-                }).then(res => {
-                  alert(res);
+                }).then(res => res.json())
+                .then( data => {
+                  console.log(data);
                   window.location.reload(true);
                 });
               };
             }
-
 
             let deleteIssueLink = document.querySelectorAll(".deleteIssue");
 
@@ -179,30 +178,18 @@
                     "Content-Type": "application/json"
                   },
                   body: JSON.stringify({
-
-                    _id: linkId,
+                    _id: linkId
                     //'' are submited when empty fields are posted on the index html page
-       
                   })
-                }).then(res => {
-                  alert(res);
-                  window.location.reload(true);
-                });
+                })
+                  .then(res => res.json())
+                  .then(data => {
+                    console.log(data.message);
+                    window.location.reload(true);
+                  });
               };
             }
-
-
-
           });
-
-
-         
-
-
-
-
-
-
 
         postForm.onsubmit = function(e) {
           e.preventDefault();
@@ -228,30 +215,14 @@
               assigned_to: assigned_to_val,
               status_text: status_text_val
             })
-          }).then(res => console.log(res));
-          //.then(result => response.json())
-          //console.log(result.message)
+          })
+            .then(res => res.json())
+            .then(data => {
+              console.log(data);
+              window.location.reload(true);
+            });
         };
       };
-
-      /*
-
-
-        
-
-
-        $('#issueDisplay').on('click','.deleteIssue', function(e) {
-          var url = "/api/issues/"+currentProject;
-          $.ajax({
-            type: "DELETE",
-            url: url,
-            data: {_id: $(this).attr('id')},
-            success: function(data) { alert(data); window.location.reload(true); }
-          });
-          e.preventDefault();
-        });
-
-        */
     </script>
   </body>
 </html>

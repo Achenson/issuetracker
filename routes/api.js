@@ -120,7 +120,7 @@ module.exports = function(app) {
 
     var project = req.params.project;
     //this object will be turn to array, filtered (in order not to update
-    //properties which were not filled be the user), turn to object again
+    //properties which were not filled be the user - ''), turn to object again
     // and then passed to $set in findOneAndUpdate
     let propsToChange = {
       issue_title: req.body.issue_title,
@@ -137,7 +137,7 @@ module.exports = function(app) {
     for (let el of arrayfromObj) {
       changedObj[el[0]] = el[1];
     }
-    /// to change???
+    /// seems counterintuitive - that's because in html form input is named open and by default is unchecked - false value in html form
     if (req.body.open) {
       changedObj.open = false;
     } else {
