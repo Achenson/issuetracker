@@ -2,126 +2,197 @@
 <html>
   <head>
     <title>Welcome to HyperDev!</title>
-    <meta name="description" content="A cool thing made with HyperDev">
-    <link id="favicon" rel="icon" href="https://hyperdev.com/favicon-app.ico" type="image/x-icon">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/public/style.css">
+    <meta name="description" content="A cool thing made with HyperDev" />
+    <link
+      id="favicon"
+      rel="icon"
+      href="https://hyperdev.com/favicon-app.ico"
+      type="image/x-icon"
+    />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/public/style.css" />
   </head>
   <body>
     <header>
-      <h1 id='projectTitle'></h1>
+      <h1 id="projectTitle"></h1>
     </header>
     <center>
-      <div id='submitNewIssue'>
-        <br>
+      <div id="submitNewIssue">
+        <br />
         <h3>Submit a new issue:</h3>
-        <form id="newIssue" >
-          <input id='1' type="text" name="issue_title" placeholder="*Title" style="width: 320px; margin-bottom: 3px;" required=''><br>
-          <textarea id='2' type="text" name="issue_text" placeholder="*Text" style="width: 320px; height: 100px;" required=''></textarea><br>
-          <input id='3' type="text" name="created_by" placeholder="*Created by" style="width: 100px" required=''>
-          <input id='4' type="text" name="assigned_to" placeholder="(opt)Assigned to" style="width: 100px">
-          <input id='5' type="text" name="status_text" placeholder="(opt)Status text" style="width: 100px"><br>
+        <form id="newIssue">
+          <input
+            id="1"
+            type="text"
+            name="issue_title"
+            placeholder="*Title"
+            style="width: 320px; margin-bottom: 3px;"
+            required=""
+          /><br />
+          <textarea
+            id="2"
+            type="text"
+            name="issue_text"
+            placeholder="*Text"
+            style="width: 320px; height: 100px;"
+            required=""
+          ></textarea
+          ><br />
+          <input
+            id="3"
+            type="text"
+            name="created_by"
+            placeholder="*Created by"
+            style="width: 100px"
+            required=""
+          />
+          <input
+            id="4"
+            type="text"
+            name="assigned_to"
+            placeholder="(opt)Assigned to"
+            style="width: 100px"
+          />
+          <input
+            id="5"
+            type="text"
+            name="status_text"
+            placeholder="(opt)Status text"
+            style="width: 100px"
+          /><br />
           <button type="submit">Submit Issue</button>
         </form>
       </div>
-      
-      <div id='issueDisplay'></div>
-      
-      <hr style='margin: 50px; margin-top: 200px'>
-    </center>
-    
-    <script src="https://code.jquery.com/jquery-2.2.1.min.js"
-            integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
-            crossorigin="anonymous"></script>
-    <script>
-      $(function() {
-        var currentProject = window.location.pathname.replace(/\//g, "");;
-        var url = "/api/issues/"+currentProject;
-        $('#projectTitle').text('All issues for: '+currentProject)
-        $.ajax({
-          type: "GET",
-          url: url,
-          success: function(data)
-          {
-            var issues= [];
-            data.forEach(function(ele) {
-              console.log(ele);
-              var openstatus;
-              (ele.open) ? openstatus = 'open' : openstatus = 'closed';
-              var single = [
-                '<div class="issue '+openstatus+'">',
-                '<p class="id">id: '+ele._id+'</p>',
-                '<h3>'+ele.issue_title+' -  ('+openstatus+')</h3>',
-                '<br>',
-                '<p>'+ele.issue_text+'</p>',
-                '<p>'+ele.status_text+'</p>',
-                '<br>',
-                '<p class="id"><b>Created by:</b> '+ele.created_by+'  <b>Assigned to:</b> '+ele.assigned_to,
-                '<p class="id"><b>Created on:</b> '+ele.created_on+'  <b>Last updated:</b> '+ele.updated_on,
-                '<br><a href="#" class="closeIssue" id="'+ele._id+'">close?</a> <a href="#" class="deleteIssue" id="'+ele._id+'">delete?</a>',
-                '</div>'
-                
-              ];
-              issues.push(single.join(''));
-            });
-            $('#issueDisplay').html(issues.join(''));
-          }
-        });
 
-        let postForm = document.getElementById('newIssue');
+      <div id="issueDisplay"></div>
+
+      <hr style="margin: 50px; margin-top: 200px" />
+    </center>
+
+    <script
+      src="https://code.jquery.com/jquery-2.2.1.min.js"
+      integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      window.onload = () => {
+        let postForm = document.getElementById("newIssue");
+        let issueDisplay = document.getElementById("issueDisplay");
+
+        let currentProject = window.location.pathname.replace(/\//g, "");
+        let myUrl = new URL(location.origin + "/api/issues/" + currentProject);
+        console.log(myUrl);
+
+        fetch(myUrl)
+          .then(response => response.json())
+          .then(data => {
+            let issues = [];
+
+            for (let el of data) {
+              let openStatus;
+              el.open ? (openStatus = "open") : (openStatus = "closed");
+              let single = [
+                '<div class="issue ' + openStatus + '">',
+                '<p class="id">id: ' + el._id + "</p>",
+                "<h3>" + el.issue_title + " -  (" + openStatus + ")</h3>",
+                "<br>",
+                "<p>" + el.issue_text + "</p>",
+                "<p>" + el.status_text + "</p>",
+                "<br>",
+                '<p class="id"><b>Created by:</b> ' +
+                  el.created_by +
+                  "  <b>Assigned to:</b> " +
+                  el.assigned_to,
+                '<p class="id"><b>Created on:</b> ' +
+                  el.created_on +
+                  "  <b>Last updated:</b> " +
+                  el.updated_on,
+                '<br><a href="#" class="closeIssue" id="' +
+                  el._id +
+                  '">close?</a> <a href="#" class="deleteIssue" id="' +
+                  el._id +
+                  '">delete?</a>',
+                "</div>"
+              ];
+              issues.push(single.join(""));
+            }
+
+            issueDisplay.innerHTML = issues.join("");
+
+            console.log(data);
+            let closeIssueLink = document.querySelectorAll(".closeIssue");
+            console.log(closeIssueLink);
+
+            for (let el of closeIssueLink) {
+              el.onclick = function(e) {
+                e.preventDefault();
+
+                let myEventTarget = e.target;
+                console.log(myEventTarget);
+                let linkId = myEventTarget.getAttribute("id");
+                console.log(linkId);
+
+                fetch(myUrl, {
+                  method: "PUT",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({
+
+                    _id: linkId,
+                    issue_title: '',
+          issue_text: '',
+      created_by: '',
+      assigned_to: '',
+    status_text: '',
+
+                    //unintuitive!!!! this close the issue
+                    open: true
+                  })
+                }).then(res => {
+                  alert(res);
+                  window.location.reload(true);
+                });
+              };
+            }
+          });
 
         postForm.onsubmit = function(e) {
-      e.preventDefault();
-
-      let issue_title_val = document.getElementById('1').value;
-      let  issue_text_val = document.getElementById('2').value;
-        let created_by_val = document.getElementById('3').value;
-        let assigned_to_val = document.getElementById('4').value;
-        let status_text_val = document.getElementById('5').value;
-
-       let postURL = new URL(location.origin + '/api/issues/apitest/')
-      
-
-
-      fetch(postURL, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-        'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          issue_title: issue_title_val,
-          issue_text: issue_text_val,
-      created_by: created_by_val,
-      assigned_to: assigned_to_val,
-    status_text: status_text_val
-
-
-
-                      })
-      
-      
-      })
-      .then((res) => console.log(res) )
-      //.then(result => response.json())
-      //console.log(result.message)
-
-
-      }
-        /*
-        //method="post" action="/api/"
-        $('#newIssue').submit(function(e){
           e.preventDefault();
-          $(this).attr('action', "/api/issues/" + currentProject);
-          $.ajax({
-            type: "POST",
-            url: url,
-            data: $(this).serialize(),
-            success: function(data) { window.location.reload(true); }
-          });
-        });
-        */
+
+          let issue_title_val = document.getElementById("1").value;
+          let issue_text_val = document.getElementById("2").value;
+          let created_by_val = document.getElementById("3").value;
+          let assigned_to_val = document.getElementById("4").value;
+          let status_text_val = document.getElementById("5").value;
+
+          let postURL = new URL(location.origin + "/api/issues/apitest/");
+
+          fetch(postURL, {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              issue_title: issue_title_val,
+              issue_text: issue_text_val,
+              created_by: created_by_val,
+              assigned_to: assigned_to_val,
+              status_text: status_text_val
+            })
+          }).then(res => console.log(res));
+          //.then(result => response.json())
+          //console.log(result.message)
+        };
+      };
+
+      /*
+
+
         $('#issueDisplay').on('click','.closeIssue', function(e) {
           var url = "/api/issues/"+currentProject;
           $.ajax({
@@ -132,6 +203,8 @@
           });
           e.preventDefault();
         });
+
+
         $('#issueDisplay').on('click','.deleteIssue', function(e) {
           var url = "/api/issues/"+currentProject;
           $.ajax({
@@ -142,7 +215,8 @@
           });
           e.preventDefault();
         });
-      });
-   </script>
+
+        */
+    </script>
   </body>
 </html>

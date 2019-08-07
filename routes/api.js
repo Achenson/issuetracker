@@ -69,8 +69,15 @@ module.exports = function(app) {
   const Issue = mongoose.model("Issue", IssueSchema);
 
   app.route("/api/issues/:project/").get(function(req, res) {
+     //eg. http://localhost:4000/api/issues/apitest?open=true
+    // http://localhost:4000/api/issues/apitest?open=true&issue_title=other
+
+
+    //object from all the queries
     let objectOfQueries = req.query;
+    //adding one property coming from params (not queries)
     objectOfQueries.project_name = req.params.project;
+
 
     Issue.find(objectOfQueries).exec((err, data) => {
       if (err) return console.error(err);
@@ -78,6 +85,8 @@ module.exports = function(app) {
       res.json(data);
     });
   });
+
+  //post
   app
     .route("/api/issues/:project/")
 
