@@ -143,6 +143,7 @@
                   body: JSON.stringify({
 
                     _id: linkId,
+                    //'' are submited when empty fields are posted on the index html page
                     issue_title: '',
           issue_text: '',
       created_by: '',
@@ -158,7 +159,50 @@
                 });
               };
             }
+
+
+            let deleteIssueLink = document.querySelectorAll(".deleteIssue");
+
+            for (let el of deleteIssueLink) {
+              el.onclick = function(e) {
+                e.preventDefault();
+
+                let myEventTarget = e.target;
+                console.log(myEventTarget);
+                let linkId = myEventTarget.getAttribute("id");
+                console.log(linkId);
+
+                fetch(myUrl, {
+                  method: "DELETE",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({
+
+                    _id: linkId,
+                    //'' are submited when empty fields are posted on the index html page
+       
+                  })
+                }).then(res => {
+                  alert(res);
+                  window.location.reload(true);
+                });
+              };
+            }
+
+
+
           });
+
+
+         
+
+
+
+
+
+
 
         postForm.onsubmit = function(e) {
           e.preventDefault();
@@ -193,16 +237,7 @@
       /*
 
 
-        $('#issueDisplay').on('click','.closeIssue', function(e) {
-          var url = "/api/issues/"+currentProject;
-          $.ajax({
-            type: "PUT",
-            url: url,
-            data: {_id: $(this).attr('id'), open: false},
-            success: function(data) { alert(data); window.location.reload(true); }
-          });
-          e.preventDefault();
-        });
+        
 
 
         $('#issueDisplay').on('click','.deleteIssue', function(e) {
