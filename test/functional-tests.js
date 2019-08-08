@@ -109,8 +109,6 @@ describe("POST - Routing Tests", function() {
 
         done();
       });
-
-   
   });
 
   it("Missing required fields", function(done) {
@@ -125,171 +123,137 @@ describe("POST - Routing Tests", function() {
         assert.equal(res.type, "application/json");
         assert.equal(res.issue_title, undefined);
 
-
         done();
       });
   });
-
-
-
 });
 
-
 describe("PUT - Routing Tests", function() {
-
   it("No body", function(done) {
     chai
       .request(server)
       .put("/api/issues/test")
-      .send({_id: "5d480c5d2190de238c8d9480",
-      issue_title: '',
-      issue_text: '',
-      created_by: '',
-      assigned_to: '',
-      status_text: ''
-
-      
+      .send({
+        _id: "5d480c5d2190de238c8d9480",
+        issue_title: "",
+        issue_text: "",
+        created_by: "",
+        assigned_to: "",
+        status_text: ""
       })
       .end(function(err, res) {
         assert.equal(res.status, 200);
         assert.equal(res.type, "application/json");
 
         assert.equal(res.body.message, "no updated field sent");
-        
-        
 
         done();
       });
   });
-
 
   it("Wrong id", function(done) {
     chai
       .request(server)
       .put("/api/issues/test")
-      .send({_id: "random wrong id"
-      
-      })
+      .send({ _id: "random wrong id" })
       .end(function(err, res) {
-       assert.equal(res.status, 200);
+        assert.equal(res.status, 200);
         assert.equal(res.type, "application/json");
 
         assert.equal(res.body.message, `could not update random wrong id`);
-        
-        
 
         done();
       });
-
-
-      
   });
 
-
-  it('One field to update', function(done) {
+  it("One field to update", function(done) {
     chai
-    .request(server)
-    .put("/api/issues/test")
-    .send({_id: "5d480c5d2190de238c8d9480",
-    issue_text: "testing one field update"
-    
-    })
-    .end(function(err, res) {
-      assert.equal(res.status, 200);
-      assert.equal(res.type, "application/json");
+      .request(server)
+      .put("/api/issues/test")
+      .send({
+        _id: "5d480c5d2190de238c8d9480",
+        issue_text: "testing one field update"
+      })
+      .end(function(err, res) {
+        assert.equal(res.status, 200);
+        assert.equal(res.type, "application/json");
 
-      //assert.equal(res.body.issue_title, undefined);
-      //assert.equal(res.body.issue_text, `testing one field update`);
+        //assert.equal(res.body.issue_title, undefined);
+        //assert.equal(res.body.issue_text, `testing one field update`);
 
-     // assert.equal(res.body.created_by, undefined);
-      //assert.equal(res.body.assigned_to, undefined);
-      //assert.equal(res.body.status_text, undefined);
-      assert.equal(res.body.message, 'successfully updated')
-      
-      
-      
+        // assert.equal(res.body.created_by, undefined);
+        //assert.equal(res.body.assigned_to, undefined);
+        //assert.equal(res.body.status_text, undefined);
+        assert.equal(res.body.message, "successfully updated");
 
-      done();
-    });
-
-
-
-
-
-    
+        done();
+      });
   });
 
+  it("mutliple fields to update", function(done) {
+    chai
+      .request(server)
+      .put("/api/issues/test")
+      .send({
+        _id: "5d480c5d2190de238c8d9480",
+        issue_text: "testing one field update",
+        issue_title: "new title"
+      })
+      .end(function(err, res) {
+        assert.equal(res.status, 200);
+        assert.equal(res.type, "application/json");
 
+        assert.equal(res.body.message, "successfully updated");
 
-
-
-
-
-  
+        done();
+      });
   });
-
+});
 
 describe("DELETE - /api/issues/{project}", function() {
-
-
-// this test works if id is valid, but if the id is not present in the db it will also pass!
-  it('Valid _id', function(done) {
+  // this test works if id is valid, but if the id is not present in the db it will also pass!
+  it("Valid _id", function(done) {
     chai
-    .request(server)
-    .delete("/api/issues/test")
-    .send({_id: "5d4969db7e201f203045239d"
-    
-    })
-    .end(function (err, res) {
-      assert.equal(res.status, 200);
-      assert.equal(res.type, "application/json");
+      .request(server)
+      .delete("/api/issues/test")
+      .send({ _id: "5d4969db7e201f203045239d" })
+      .end(function(err, res) {
+        assert.equal(res.status, 200);
+        assert.equal(res.type, "application/json");
 
-      assert.equal(res.body.message, "deleted 5d4969db7e201f203045239d");
+        assert.equal(res.body.message, "deleted 5d4969db7e201f203045239d");
 
-      done();
-    })
-  
-  })
+        done();
+      });
+  });
 
-  it('No _id', function(done) {
+  it("No _id", function(done) {
     chai
-    .request(server)
-    .delete("/api/issues/test")
-    .send({_id: ""
-    
-    })
-    .end(function (err, res) {
-      assert.equal(res.status, 200);
-      assert.equal(res.type, "application/json");
+      .request(server)
+      .delete("/api/issues/test")
+      .send({ _id: "" })
+      .end(function(err, res) {
+        assert.equal(res.status, 200);
+        assert.equal(res.type, "application/json");
 
-      assert.equal(res.body.message, "_id error");
+        assert.equal(res.body.message, "_id error");
 
-      done();
-    })
-  
-  })
+        done();
+      });
+  });
 
-
-  it('Invalid id', function(done) {
+  it("Invalid id", function(done) {
     chai
-    .request(server)
-    .delete("/api/issues/test")
-    .send({_id: "fff"
-    
-    })
-    .end(function (err, res) {
-      assert.equal(res.status, 200);
-      assert.equal(res.type, "application/json");
+      .request(server)
+      .delete("/api/issues/test")
+      .send({ _id: "fff" })
+      .end(function(err, res) {
+        assert.equal(res.status, 200);
+        assert.equal(res.type, "application/json");
 
-      assert.equal(res.body.message, "could not delete fff");
+        assert.equal(res.body.message, "could not delete fff");
 
-      done();
-    })
-  
-  })
-
-
-
-
-
-})
+        done();
+      });
+  });
+});
