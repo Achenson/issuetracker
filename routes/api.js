@@ -16,8 +16,8 @@ var dotenv = require('dotenv');
 
 dotenv.config();
 
-//const CONNECTION_STRING='mongodb+srv://Achenson:dsf3Z1IKO1GCEZtv@mongo-for-fcc-13gh5.mongodb.net/test?retryWrites=true&w=majority';
-const CONNECTION_STRING = process.env.DB; //MongoClient.connect(CONNECTION_STRING, function(err, db) {});
+//const CONNECTION_STRING='mongodb+srv://<Username>:<password>@mongo-for-fcc-13gh5.mongodb.net/test?retryWrites=true&w=majority';
+const CONNECTION_STRING = process.env.DB; // install dotenv, require it, dotenv.config()
 
 
 
