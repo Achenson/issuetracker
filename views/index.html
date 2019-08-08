@@ -57,12 +57,17 @@
           in the query(ie. <code>/api/issues/{project}?open=false</code>). I can
           pass along as many fields/values as I want.
         </li>
-        <li>All 11 functional tests are complete and passing.</li>
+        <li>
+          All 12 (one additional test added) functional tests are complete and
+          passing.
+        </li>
       </ol>
       <br />
       <h3>Example get usage:</h3>
       <code>/api/issues/{project}</code><br />
-      <code>/api/issues/{project}?open=true&amp;assigned_to=Joe</code><br />
+      <code>/api/issues/apitest</code><br /><br />
+      <code>/api/issues/{project}?open=true&amp;created_by=new</code><br />
+      <code>/api/issues/apitest?open=true&amp;created_by=new</code><br />
       <h3>Example return:</h3>
       <code
         >[{"_id":"5871dda29faedc3491ff93bb","issue_title":"Fix error in posting
@@ -201,12 +206,11 @@
       crossorigin="anonymous"
     ></script>
     <script>
-     
       let postForm = document.getElementById("testForm");
       let putForm = document.getElementById("testForm2");
       let deleteForm = document.getElementById("testForm3");
 
-  
+      let jsonResult = document.getElementById("jsonResult");
 
       postForm.onsubmit = function(e) {
         e.preventDefault();
@@ -232,9 +236,16 @@
             assigned_to: assigned_to_val,
             status_text: status_text_val
           })
-        }).then(res => res.json())
-        .then(data => console.log(data))
-        
+        })
+          .then(res => res.json())
+          .then(data => {
+            jsonResult.innerText = "{";
+            console.log(data);
+            for (let key in data) {
+              jsonResult.innerText += `"${key}": "${data[key]}",`;
+            }
+            jsonResult.innerText += "}";
+          });
       };
 
       putForm.onsubmit = function(e) {
@@ -265,8 +276,16 @@
             status_text: status_text_val,
             open: open_val
           })
-        }).then(res => res.json())
-        .then(data => console.log(data.message))
+        })
+          .then(res => res.json())
+          .then(data => {
+            console.log(data);
+            jsonResult.innerText = '';
+            jsonResult.innerText += data.message;
+            
+          
+
+          });
       };
 
       deleteForm.onsubmit = function(e) {
@@ -283,8 +302,6 @@
           .then(res => res.json())
           .then(data => console.log(data.message));
       };
-
-      
     </script>
   </body>
 </html>

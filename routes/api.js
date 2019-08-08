@@ -70,7 +70,7 @@ module.exports = function(app) {
 
   app.route("/api/issues/:project/").get(function(req, res) {
      //eg. http://localhost:4000/api/issues/apitest?open=true
-    // http://localhost:4000/api/issues/apitest?open=true&issue_title=other
+    
 
 
     //object from all the queries
@@ -163,21 +163,24 @@ module.exports = function(app) {
 
       if (err) {
         console.error(err);
+
         
         res.json({ message: `could not update ${req.body._id}` });
 
         // if only _id is submitted, the changedObj will consist of new Data & open
       } else if (Object.keys(changedObj).length === 2) {
-        console.log('adsfadfadf');
+        console.log('no updated fiel sent');
        res.json({ message: `no updated field sent` });
       return;
 
       } else  {
 
 
-        console.log(data);
+        console.log('successfully updated');
         
-        res.json(changedObj);
+       // res.json(changedObj);
+        res.json({ message: 'successfully updated'})
+
       }
     });
   });
