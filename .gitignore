@@ -1,2 +1,4 @@
 node_modules
 debug.js
+database.js
+.env

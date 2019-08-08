@@ -12,11 +12,14 @@ var expect = require("chai").expect;
 var MongoClient = require("mongodb");
 var ObjectId = require("mongodb").ObjectID;
 var mongoose = require("mongoose");
+var dotenv = require('dotenv');
 
-//const CONNECTION_STRING = process.env.DB; //MongoClient.connect(CONNECTION_STRING, function(err, db) {});
+dotenv.config();
 
-const CONNECTION_STRING =
-  "mongodb+srv://Achenson:dsf3Z1IKO1GCEZtv@mongo-for-fcc-13gh5.mongodb.net/test?retryWrites=true&w=majority";
+//const CONNECTION_STRING='mongodb+srv://Achenson:dsf3Z1IKO1GCEZtv@mongo-for-fcc-13gh5.mongodb.net/test?retryWrites=true&w=majority';
+const CONNECTION_STRING = process.env.DB; //MongoClient.connect(CONNECTION_STRING, function(err, db) {});
+
+
 
 mongoose
   .connect(CONNECTION_STRING, { useNewUrlParser: true })
